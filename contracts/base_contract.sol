@@ -9,10 +9,13 @@ contract base_contract{
   mapping(address=>uint256) voterAadhar;
   mapping(uint256=>address) contestants;
   mapping(address=>uint256) votes;
+  event contestantAdded(address contestant);
+  event voted(address contestant, address voter, uint256 currentVoteCount);
+
   bool paused=false;
 
   modifier godMode(){
-    require(msg.sender==owner,"Only owner can perform this reaction");
+    require(msg.sender==owner,"Only owner can perform this action");
     _;
   }
 
@@ -25,13 +28,19 @@ contract base_contract{
     paused=true;
   }
 
+  function contractStatus() public view returns (bool){
+    return paused;
+  }
+
   function addContestants(uint contestantId, address contestantAddress) public godMode isContractActive{
     contestants[contestantId]=contestantAddress;
+    emit contestantAdded(contestants[contestantId]);
   }
 
   function voteFor(uint contestantId,uint voterAadharNo) public isContractActive{
     votes[contestants[contestantId]]+=1;
     voterAadhar[msg.sender]=voterAadharNo;
+    emit voted(contestants[contestantId],msg.sender,votes[contestants[contestantId]]);
   }
 
 
