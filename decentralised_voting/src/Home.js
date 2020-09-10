@@ -77,12 +77,15 @@ class Home extends Component {
   }
 
   handleChange(event){
-    console.log(event);
+    //console.log(event);
+    event.persist()
+    const name=event.target.name;
+    this.setState({[name]:event.target.value})
   }
 
   handleSubmit(event){
     event.preventDefault();
-    //console.log(event);
+    console.log(event.target.value);
   }
 
   render(){
@@ -90,7 +93,7 @@ class Home extends Component {
     return(
       <div className="container">
         <h1> Welcome to decentralised Voting </h1>
-        <Form onSubmit={this.handleSubmit}>
+        <Form onSubmit={this.handleSubmit} >
       <Row form>
         <Col style={{margin:"70px 70px 0px 70px"}} md={{size:2,offset:2}}>
           <FormGroup>
@@ -106,7 +109,7 @@ class Home extends Component {
         </Col>
       </Row>
       <Col  md={{offset:3}}>
-        <Button  type="submit" outline color="primary"> Add contestant </Button>
+        <Button  type="submit"  outline color="primary"> Add contestant </Button>
       </Col>
       </Form>
       </div>
