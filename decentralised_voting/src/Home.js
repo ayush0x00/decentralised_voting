@@ -1,74 +1,12 @@
 import React, {Component} from 'react';
-import {Row,Col,Input,Button,Label,Form,FormGroup,FormText} from 'reactstrap'
-//import Web3 from 'web3';
-const abi=[
-  {
-    "inputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "disableContract",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "contestantId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "contestantAddress",
-        "type": "address"
-      }
-    ],
-    "name": "addContestants",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "contestantId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "voterAadharNo",
-        "type": "uint256"
-      }
-    ],
-    "name": "voteFor",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
-];
-
-/*var web3=new Web3(Web3.givenProvider);
-web3.eth.defaultAccount=web3.eth.accounts[0];
-var contract=new web3.eth.Contract(abi);
-console.log(contract);*/
-
+import {Row,Col,Input,Button,Label,Form,FormGroup,FormText,Alert} from 'reactstrap'
 
 class Home extends Component {
   constructor(props){
     super(props);
     this.state={
+      currentAccount:"",
+      currentBalance:"",
       contestantId:0,
       contestantAddress:''
     }
@@ -76,20 +14,38 @@ class Home extends Component {
     this.handleChange=this.handleChange.bind(this);
   }
 
+  componentDidMount(){
+    this.loadingContract();
+  }
+
+  async loadingContract(){
+    const network=await this.props.web3.eth.net.getNetworkType();
+    const currentAccount=await this.props.web3.eth.getAccounts();
+    const currentBalance=await this.props.web3.eth.getBalance(currentAccount[0]);
+    this.setState({currentAccount:currentAccount[0],currentBalance});
+  }
+
+  async addingContestant(){
+    const result=await this.props.contract.methods.addContestants(this.state.contestantId,this.state.contestantAddress);
+    <Alert color="success">
+      <h4>Contestant Added successfully</h4>
+      <p> `Hola! Admin, You have successfully added a new contestan with id {this.state.contestantId} and address {this.state.contestantAddress}</p>
+    </Alert>
+  }
+
   handleChange(event){
-    //console.log(event);
     event.persist()
     const name=event.target.name;
     this.setState({[name]:event.target.value})
+
   }
 
   handleSubmit(event){
     event.preventDefault();
-    console.log(event.target.value);
+    this.addingContestant();
   }
 
   render(){
-    //console.log(web3.version);
     return(
       <div className="container">
         <h1> Welcome to decentralised Voting </h1>
