@@ -1,73 +1,14 @@
 import React, {Component} from 'react';
 import {Row,Col,Input,Button,Label,Form,FormGroup,FormText} from 'reactstrap'
-//import Web3 from 'web3';
-const abi=[
-  {
-    "inputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "disableContract",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "contestantId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "contestantAddress",
-        "type": "address"
-      }
-    ],
-    "name": "addContestants",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "contestantId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "voterAadharNo",
-        "type": "uint256"
-      }
-    ],
-    "name": "voteFor",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
-];
+import {ContractForm} from 'drizzle-react-components'
+import {drizzleConnect} from 'drizzle-react';
 
-/*var web3=new Web3(Web3.givenProvider);
-web3.eth.defaultAccount=web3.eth.accounts[0];
-var contract=new web3.eth.Contract(abi);
-console.log(contract);*/
-
+const mapStateToProps = (state)=> ({state});
 
 class Home extends Component {
   constructor(props){
     super(props);
+    console.log(this.props);
     this.state={
       contestantId:0,
       contestantAddress:''
@@ -83,9 +24,10 @@ class Home extends Component {
     this.setState({[name]:event.target.value})
   }
 
-  handleSubmit(event){
+   handleSubmit(event){
     event.preventDefault();
-    console.log(event.target.value);
+    //<ContractForm contract="base_contract" method="addContestants" methodArgs={[this.state.contestantId,this.state.contestantAddress]} />
+
   }
 
   render(){
@@ -93,7 +35,7 @@ class Home extends Component {
     return(
       <div className="container">
         <h1> Welcome to decentralised Voting </h1>
-        <Form onSubmit={this.handleSubmit} >
+        <ContractForm onSubmit={this.handleSubmit} >
       <Row form>
         <Col style={{margin:"70px 70px 0px 70px"}} md={{size:2,offset:2}}>
           <FormGroup>
@@ -111,10 +53,10 @@ class Home extends Component {
       <Col  md={{offset:3}}>
         <Button  type="submit"  outline color="primary"> Add contestant </Button>
       </Col>
-      </Form>
+      </ContractForm>
       </div>
     )
   }
 }
 
-export default Home;
+export default drizzleConnect(Home,mapStateToProps);
