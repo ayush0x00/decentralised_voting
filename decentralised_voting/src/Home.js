@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Row,Col,Input,Button,Label,Form,FormGroup,FormText,Alert} from 'reactstrap'
+import {Jumbotron,Button} from 'reactstrap';
 
 class Home extends Component {
   constructor(props){
@@ -7,14 +7,10 @@ class Home extends Component {
     this.state={
       currentAccount:"",
       currentBalance:"",
-      contestantId:0,
-      contestantAddress:''
     }
-    this.handleSubmit=this.handleSubmit.bind(this);
-    this.handleChange=this.handleChange.bind(this);
   }
 
-  componentDidMount(){
+  /*componentDidMount(){
     this.loadingContract();
   }
 
@@ -23,52 +19,24 @@ class Home extends Component {
     const currentAccount=await this.props.web3.eth.getAccounts();
     const currentBalance=await this.props.web3.eth.getBalance(currentAccount[0]);
     this.setState({currentAccount:currentAccount[0],currentBalance});
-  }
-
-  async addingContestant(){
-    const result=await this.props.contract.methods.addContestants(this.state.contestantId,this.state.contestantAddress);
-    <Alert color="success">
-      <h4>Contestant Added successfully</h4>
-      <p> `Hola! Admin, You have successfully added a new contestan with id {this.state.contestantId} and address {this.state.contestantAddress}</p>
-    </Alert>
-  }
-
-  handleChange(event){
-    event.persist()
-    const name=event.target.name;
-    this.setState({[name]:event.target.value})
-
-  }
-
-  handleSubmit(event){
-    event.preventDefault();
-    this.addingContestant();
-  }
+  }*/
 
   render(){
     return(
-      <div className="container">
-        <h1> Welcome to decentralised Voting </h1>
-        <Form onSubmit={this.handleSubmit} >
-      <Row form>
-        <Col style={{margin:"70px 70px 0px 70px"}} md={{size:2,offset:2}}>
-          <FormGroup>
-            <Label for="contestantId">Contestant ID</Label>
-            <Input onChange={this.handleChange} value={this.state.contestantId} type="text" name="contestantId" id="contestantId" placeholder="contestantId" />
-          </FormGroup>
-        </Col>
-        <Col style={{margin:"70px 70px 0px 70px"}} md={{size:6,offset:1}}>
-          <FormGroup>
-            <Label for="contestantAddress">Contestant Address</Label>
-            <Input type="text" name="contestantAddress" onChange={this.handleChange} value={this.state.contestantAddress} id="contestantAddress" placeholder="contestantAddress" />
-          </FormGroup>
-        </Col>
-      </Row>
-      <Col  md={{offset:3}}>
-        <Button  type="submit"  outline color="primary"> Add contestant </Button>
-      </Col>
-      </Form>
-      </div>
+      <div>
+  <Jumbotron>
+    <h1 className="display-3">Hola!</h1>
+    <p className="lead">This web App is an implementation of using ethereum blockchain solutions for providing a safer platform for online voting.</p>
+    <hr className="my-2" />
+    <p>It uses blockchain technology to provide a public ledger which is practically immmutable. The votes can be casted from any device
+    with an internet connection and voterId. The present implementation uses aadhar number inorder to verify voters. It includes a pausability feature to terminate the contract,
+    however, this feature can only be used by deployer of the contract.</p>
+    <p className="lead">
+      <Button color="primary">Learn More</Button>
+    </p>
+  </Jumbotron>
+</div>
+
     )
   }
 }
