@@ -2,24 +2,6 @@ import React, {Component} from 'react';
 import {Jumbotron,Button} from 'reactstrap';
 
 class Home extends Component {
-  constructor(props){
-    super(props);
-    this.state={
-      currentAccount:"",
-      currentBalance:"",
-    }
-  }
-
-  /*componentDidMount(){
-    this.loadingContract();
-  }
-
-  async loadingContract(){
-    const network=await this.props.web3.eth.net.getNetworkType();
-    const currentAccount=await this.props.web3.eth.getAccounts();
-    const currentBalance=await this.props.web3.eth.getBalance(currentAccount[0]);
-    this.setState({currentAccount:currentAccount[0],currentBalance});
-  }*/
 
   render(){
     return(

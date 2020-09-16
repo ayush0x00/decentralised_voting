@@ -29,6 +29,16 @@ handleSubmit(event){
   event.preventDefault();
   this.addingContestant();
 }
+componentDidMount(){
+  this.loadingContract();
+}
+
+async loadingContract(){
+  console.log(this.props.contract);
+  console.log(this.props.web3);
+  const network=await this.props.web3.eth.net.getNetworkType();
+  const currentAccount=await this.props.web3.eth.getAccounts();
+}
 
 render(){
   return(

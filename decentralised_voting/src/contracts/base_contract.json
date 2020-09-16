@@ -3618,6 +3618,51 @@
     "version": "0.5.16+commit.9c3226ce.Emscripten.clang"
   },
   "networks": {
+    "4": {
+      "events": {
+        "0x27f04287c0c594cf692d20d08df7add10501347b417d525d8bef6d7380549941": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "contestant",
+              "type": "address"
+            }
+          ],
+          "name": "contestantAdded",
+          "type": "event"
+        },
+        "0x9df1db5c4300ffb6c360aa6a41d9a19de3d9ab685fb2fff2782a64204e8d7f43": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "contestant",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "voter",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "currentVoteCount",
+              "type": "uint256"
+            }
+          ],
+          "name": "voted",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xD246AEE1C357A0164d767ec0d4A85081229b2174",
+      "transactionHash": "0x08e99ecb15336d963064cf8778e72b79ee4e584f8c01f7edebffd21498c61f56"
+    },
     "5777": {
       "events": {
         "0x27f04287c0c594cf692d20d08df7add10501347b417d525d8bef6d7380549941": {
@@ -3660,12 +3705,12 @@
         }
       },
       "links": {},
-      "address": "0xD4bd365570e1059B540B516e0bacd61fBd8fcA40",
-      "transactionHash": "0xa9d198115440a961b83ce0aaeeaf3c252c52bd2add7769990a216b39cbf9c2d4"
+      "address": "0x691E00CC42A2AAE4e96eD035976d1806D68bb08D",
+      "transactionHash": "0xbfea10dca3fb6792cb1451ef4ae1702e8b9300de83b2ebde687c269db1cdc19b"
     }
   },
   "schemaVersion": "3.2.0",
-  "updatedAt": "2020-09-13T21:14:00.079Z",
+  "updatedAt": "2020-09-16T21:22:29.304Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
