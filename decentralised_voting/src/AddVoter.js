@@ -11,12 +11,14 @@ class AddVoter extends Component{
       this.handleChange=this.handleChange.bind(this);
       this.handleSubmit=this.handleSubmit.bind(this);
     }
+componentDidMount(){
+  this.loadingContract()
+}
 
 async addingContestant(){
-  const receipt=await this.props.contract.methods.addContestants(this.state.contestantId,this.state.contestantAddress).send({from:this.state.currentAccount});
-  await this.props.contract.getPastEvents("allEvents", function(error, event){ console.log(event); });
+  const receipt=await this.props.contract.methods.addContestants(this.state.contestantId,this.state.contestantAddress).send({from:"0x319b770eBA2ad8Fdf7DEa91379d95C3c24Ddcb5B"})
+  await this.props.contract.once('contestantAdded',function(error,event){console.log(event);})
   console.log(receipt);
-  //console.log(result);
 }
 
 handleChange(event){
@@ -28,17 +30,17 @@ handleChange(event){
 handleSubmit(event){
   event.preventDefault();
   this.addingContestant();
-}
-componentDidMount(){
-  this.loadingContract();
+
 }
 
+
 async loadingContract(){
-  console.log(this.props.contract);
-  console.log(this.props.web3);
   const network=await this.props.web3.eth.net.getNetworkType();
-  const currentAccount=await this.props.web3.eth.getAccounts();
+  const status=await this.props.contract.methods.contractStatus().call()
+  console.log(status);
 }
+
+
 
 render(){
   return(
