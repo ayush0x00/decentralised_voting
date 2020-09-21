@@ -1,15 +1,20 @@
 import React,{Component} from 'react'
 import {Row,Form,FormGroup,Col,Input,Label,Button} from "reactstrap"
+const IPFS=require('ipfs-api');
+const ipfs=new IPFS({host:'ipfs.infura.io',port:5001,protcol:'https'})
 
 class AddVoter extends Component{
     constructor(props){
       super(props);
       this.state={
         contestantId:0,
-        contestantAddress:""
+        contestantAddress:"",
+        imageBuffer:"",
+        ipfsHash:null
       }
       this.handleChange=this.handleChange.bind(this);
       this.handleSubmit=this.handleSubmit.bind(this);
+      this.captureImage=this.captureImage.bind(this);
     }
 componentDidMount(){
   this.loadingContract()
@@ -21,6 +26,19 @@ async addingContestant(){
   console.log(receipt);
 }
 
+ captureImage(event){
+   event.preventDefault();
+  const file=event.target.files[0];
+  let reader=new window.FileReader()
+  reader.readAsArrayBuffer(file);
+  reader.onloadend= ()=>this.convertToBuffer(reader);
+}
+
+async convertToBuffer(reader){
+  const buffer=Buffer.from(reader.result);
+  this.setState({imageBuffer:buffer});
+}
+
 handleChange(event){
   event.persist()
   const name=event.target.name;
@@ -30,6 +48,14 @@ handleChange(event){
 handleSubmit(event){
   event.preventDefault();
   this.addingContestant();
+  ipfs.files.add(this.state.buffer,(err,res)=>{
+    if(err){
+      console.log(err);
+      return
+    }
+    console.log(res);
+    return this.setState({ipfsHash:res[0].hash})
+  })
 
 }
 
@@ -37,7 +63,7 @@ handleSubmit(event){
 async loadingContract(){
   const network=await this.props.web3.eth.net.getNetworkType();
   const status=await this.props.contract.methods.contractStatus().call()
-  console.log(status);
+  console.log(this.props.contract);
 }
 
 
@@ -60,6 +86,11 @@ render(){
           <Input type="text" name="contestantAddress" onChange={this.handleChange} value={this.state.contestantAddress} id="contestantAddress" placeholder="contestantAddress" />
         </FormGroup>
       </Col>
+    </Row>
+    <Row style={{margin:"0px 70px 0px 70px"}}>
+      <FormGroup>
+      <Input type="file" name="uploadImage" onChange={this.captureImage} id="uploadImage" placeholder="Upload Contestant Image" />
+      </FormGroup>
     </Row>
     <Col  md={{offset:3}}>
       <Button  type="submit"  outline color="primary"> Add contestant </Button>
