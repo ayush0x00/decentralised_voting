@@ -8,8 +8,8 @@ contract base_contract{
   }
   mapping(address=>uint256) voterAadhar;
   mapping(uint256=>address) contestants;
-  mapping(address=>uint256) votes;
-  mapping(uint256=>string) contestantImage;
+  mapping(address=>uint256) public votes;
+  mapping(uint256=>string) private contestantImage;
   event contestantAdded(address contestant,string contestantImage);
   event voted(address contestant, address voter, uint256 currentVoteCount);
 
@@ -33,10 +33,10 @@ contract base_contract{
     return paused;
   }
 
-  function addContestants(uint contestantId, address contestantAddress, string contestantImage) public godMode isContractActive{
+  function addContestants(uint contestantId, address contestantAddress, string memory image) public godMode isContractActive{
     contestants[contestantId]=contestantAddress;
-    contestantImage[contestantId]=contestantImage;
-    emit contestantAdded(contestants[contestantId],contestantImage);
+    contestantImage[contestantId]=image;
+    emit contestantAdded(contestants[contestantId],image);
   }
 
   function voteFor(uint contestantId,uint voterAadharNo) public isContractActive{

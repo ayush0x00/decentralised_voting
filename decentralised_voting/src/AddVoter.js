@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {Row,Form,FormGroup,Col,Input,Label,Button} from "reactstrap"
+import {Row,Form,FormGroup,Col,Input,Label,Button,Image} from "reactstrap"
 const IPFS=require('ipfs-api');
 const ipfs=new IPFS({host:'ipfs.infura.io',port:5001,protcol:'https'})
 
@@ -21,13 +21,14 @@ componentDidMount(){
 }
 
 async addingContestant(){
-  const receipt=await this.props.contract.methods.addContestants(this.state.contestantId,this.state.contestantAddress).send({from:"0x319b770eBA2ad8Fdf7DEa91379d95C3c24Ddcb5B"})
+  const receipt=await this.props.contract.methods.addContestants(this.state.contestantId,this.state.contestantAddress,this.state.ipfsHash).send({from:"0x7ea332a6D0f3de012596fA91AF534546fCdd1805"})
   await this.props.contract.once('contestantAdded',function(error,event){console.log(event);})
   console.log(receipt);
 }
 
  captureImage(event){
-   event.preventDefault();
+   event.stopPropagation();
+  event.preventDefault();
   const file=event.target.files[0];
   let reader=new window.FileReader()
   reader.readAsArrayBuffer(file);
@@ -45,18 +46,19 @@ handleChange(event){
   this.setState({[name]:event.target.value})
 }
 
-handleSubmit(event){
+async handleSubmit(event){
   event.preventDefault();
-  this.addingContestant();
-  ipfs.files.add(this.state.buffer,(err,res)=>{
+  //console.log(this.state.imageBuffer);
+  //console.log("Contestant Added ...moving to store file");
+  ipfs.files.add(this.state.imageBuffer,(err,res)=>{
     if(err){
       console.log(err);
       return
     }
-    console.log(res);
-    return this.setState({ipfsHash:res[0].hash})
+    //console.log(res);
+    return this.setState({ipfsHash:"https://gateway.ipfs.io/ipfs/"+res[0].hash})
   })
-
+  await this.addingContestant();
 }
 
 
