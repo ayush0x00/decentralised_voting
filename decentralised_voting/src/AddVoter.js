@@ -21,9 +21,10 @@ componentDidMount(){
 }
 
 async addingContestant(){
-  const receipt=await this.props.contract.methods.addContestants(this.state.contestantId,this.state.contestantAddress,this.state.ipfsHash).send({from:"0x7ea332a6D0f3de012596fA91AF534546fCdd1805"})
+  //console.log(`the ipfs hash is ${this.state.ipfsHash}`);
+  const receipt=await this.props.contract.methods.addContestants(this.state.contestantId,this.state.contestantAddress,this.state.ipfsHash).send({from:"0xFfe91604Da4FF36f462b2F6c932520cDf8E2c071",gas:3000000})
   await this.props.contract.once('contestantAdded',function(error,event){console.log(event);})
-  console.log(receipt);
+  console.log(receipt)
 }
 
  captureImage(event){
@@ -48,24 +49,17 @@ handleChange(event){
 
 async handleSubmit(event){
   event.preventDefault();
-  //console.log(this.state.imageBuffer);
-  //console.log("Contestant Added ...moving to store file");
-  ipfs.files.add(this.state.imageBuffer,(err,res)=>{
-    if(err){
-      console.log(err);
-      return
-    }
-    //console.log(res);
-    return this.setState({ipfsHash:"https://gateway.ipfs.io/ipfs/"+res[0].hash})
-  })
-  await this.addingContestant();
+  const result=await ipfs.files.add(this.state.imageBuffer);
+  //console.log(result);
+  this.setState({ipfsHash:result[0].hash})
+  this.addingContestant();
 }
 
 
 async loadingContract(){
   const network=await this.props.web3.eth.net.getNetworkType();
   const status=await this.props.contract.methods.contractStatus().call()
-  console.log(this.props.contract);
+  console.log(this.props.web3);
 }
 
 
