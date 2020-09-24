@@ -10,7 +10,6 @@ import Web3 from 'web3';
 import base_contract from "./contracts/base_contract.json"
 
 const web3=new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
-console.log(web3.eth.accounts);
 const contract=new web3.eth.Contract(base_contract.abi,"0xA8969aeCF382F6904519B704cFA1A595f4c24F5a")
 
 
