@@ -1,7 +1,9 @@
 import React,{Component} from 'react'
 import {Row,Form,FormGroup,Col,Input,Label,Button,Image,Alert} from "reactstrap"
+import ContestantDetails from './ContestantDetails'
 const IPFS=require('ipfs-api');
 const ipfs=new IPFS({host:'ipfs.infura.io',port:5001,protcol:'https'})
+console.log(ipfs);
 
 class AddVoter extends Component{
     constructor(props){
@@ -11,7 +13,7 @@ class AddVoter extends Component{
         contestantAddress:"",
         imageBuffer:"",
         ipfsHash:null,
-        senderAddress:"",
+        senderAddress:null,
         senderBalance:null
       }
       this.handleChange=this.handleChange.bind(this);
@@ -27,7 +29,7 @@ async addingContestant(){
   const receipt=await this.props.contract.methods.addContestants(this.state.contestantId,this.state.contestantAddress,this.state.ipfsHash).send({from:this.state.senderAddress,gas:3000000})
   //await this.props.contract.once('contestantAdded',function(error,event){console.log(event);})
   alert("transaction successfull")
-
+  //console.log(receipt);
 }
 
  captureImage(event){
@@ -52,8 +54,11 @@ handleChange(event){
 
 async handleSubmit(event){
   event.preventDefault();
-  const result=await ipfs.files.add(this.state.imageBuffer);
-  //console.log(result);
+  //console.log(this.state.imageBuffer);
+  const result=await ipfs.files.add(this.state.imageBuffer,(err,res)=>{
+    console.log(err);
+  });
+  console.log(result);
   this.setState({ipfsHash:result[0].hash})
   this.addingContestant();
 }
@@ -72,6 +77,14 @@ async loadingContract(){
 
 
 render(){
+  if(this.state.senderAddress===null)
+  return(
+    <h1>Your ethereum account is not connected...please check network connection and try again</h1>
+  )
+  else if(this.state.senderAddress!==null && this.state.senderBalance===null){
+    return(<p>Your account {this.state.senderAddress} does not have any ethers to make the transaction</p>)
+  }
+  else{
   return(
     <div className="container">
       <h1 className="row" style={{margin:"20px 0px 0px 0px"}}> Welcome to decentralised Voting </h1>
@@ -103,6 +116,7 @@ render(){
     </Form>
     </div>
   )
+}
 }
 }
 
