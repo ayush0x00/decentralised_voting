@@ -1,7 +1,8 @@
 import React,{Component} from 'react'
-import {Row,Form,FormGroup,Col,Input,Label,Button,Image} from "reactstrap"
-const IPFS=require('ipfs-api');
-const ipfs=new IPFS({host:'ipfs.infura.io',port:5001,protcol:'https'})
+import {Row,Form,FormGroup,Col,Input,Label,Button,Image,Alert} from "reactstrap"
+import ContestantDetails from './ContestantDetails'
+const IPFS=require('ipfs-http-client');
+const ipfs=new IPFS({host:'ipfs.infura.io',port:5001,protocol:'https'})
 console.log(ipfs);
 
 class AddVoter extends Component{
@@ -51,9 +52,7 @@ handleChange(event){
 async handleSubmit(event){
   event.preventDefault();
   //console.log(this.state.imageBuffer);
-  const result=await ipfs.files.add(this.state.imageBuffer,(err,res)=>{
-    console.log(err);
-  });
+  const result=await ipfs.add(this.state.imageBuffer);
   console.log(result);
   this.setState({ipfsHash:result[0].hash})
   this.addingContestant();
