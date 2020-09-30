@@ -5,10 +5,17 @@ class ContestantDetails extends Component{
     super(props);
   }
   render(){
-    return(
-      <div>Hello</div>
+    if(this.props.ipfsHash!==""){
+      return(
+      <div>
+        <img src={`https://ipfs.io/ipfs/${this.props.ipfsVal}`} />
+      </div>
     )
   }
+  else{
+    return(<h1>Waiting for first contestant to be added...</h1>)
+  }
+}
 }
 
 export default ContestantDetails;

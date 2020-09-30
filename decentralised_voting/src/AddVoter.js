@@ -1,9 +1,9 @@
 import React,{Component} from 'react'
 import {Row,Form,FormGroup,Col,Input,Label,Button,Image,Alert} from "reactstrap"
-import ContestantDetails from './ContestantDetails'
-const IPFS=require('ipfs-http-client');
-const ipfs=new IPFS({host:'ipfs.infura.io',port:5001,protocol:'https'})
-console.log(ipfs);
+import ContestantCard from './Card'
+
+const IPFS=require('ipfs-api');
+const ipfs=new IPFS({host:'ipfs.infura.io',port:5001,protcol:'https'})
 
 class AddVoter extends Component{
     constructor(props){
@@ -12,7 +12,9 @@ class AddVoter extends Component{
         contestantId:0,
         contestantAddress:"",
         imageBuffer:"",
-        ipfsHash:null
+        ipfsHash:this.props.previpfsHash,
+        senderAddress:"",
+        senderBalance:null
       }
       this.handleChange=this.handleChange.bind(this);
       this.handleSubmit=this.handleSubmit.bind(this);
@@ -24,9 +26,12 @@ componentDidMount(){
 
 async addingContestant(){
   //console.log(`the ipfs hash is ${this.state.ipfsHash}`);
-  const receipt=await this.props.contract.methods.addContestants(this.state.contestantId,this.state.contestantAddress,this.state.ipfsHash).send({from:"0xFfe91604Da4FF36f462b2F6c932520cDf8E2c071",gas:3000000})
-  await this.props.contract.once('contestantAdded',function(error,event){console.log(event);})
-  console.log(receipt)
+  const receipt=await this.props.contract.methods.addContestants(this.state.contestantId,this.state.contestantAddress,this.state.ipfsHash).send({from:this.state.senderAddress,gas:3000000})
+  //await this.props.contract.once('contestantAdded',function(error,event){console.log(event);})
+  //alert("transaction successfull")
+  this.props.getipfsHash(this.state.ipfsHash);
+  console.log(this.state.ipfsHash);
+
 }
 
  captureImage(event){
@@ -51,34 +56,34 @@ handleChange(event){
 
 async handleSubmit(event){
   event.preventDefault();
-  //console.log(this.state.imageBuffer);
-  const result=await ipfs.add(this.state.imageBuffer);
-  console.log(result);
+  const result=await ipfs.files.add(this.state.imageBuffer);
+  //console.log(result);
   this.setState({ipfsHash:result[0].hash})
+  //console.log(this.state.ipfsHash);
   this.addingContestant();
 }
 
 
 async loadingContract(){
-  const network=await this.props.web3.eth.net.getNetworkType();
-  const status=await this.props.contract.methods.contractStatus().call()
-  console.log(this.props.web3);
+   this.props.web3.eth.getAccounts((err,res)=>{
+    if(err) console.log(err);
+    else {
+      this.setState({senderAddress:res[0]})
+      this.props.web3.eth.getBalance(res[0]).then((res)=>this.setState({senderBalance:this.props.web3.utils.fromWei(res,"ether")}))
+    }
+  })
 }
 
 
 
 render(){
-  if(this.state.senderAddress===null)
-  return(
-    <h1>Your ethereum account is not connected...please check network connection and try again</h1>
-  )
-  else if(this.state.senderAddress!==null && this.state.senderBalance===null){
-    return(<p>Your account {this.state.senderAddress} does not have any ethers to make the transaction</p>)
-  }
+  if(this.state.senderAddress==="") return(<h1>Your ethereum account is not connected</h1>)
   else{
   return(
     <div className="container">
-      <h1> Welcome to decentralised Voting </h1>
+      <h1 className="row" style={{margin:"20px 0px 0px 0px"}}> Welcome to decentralised Voting </h1>
+      <hr />
+      <p>Your current accoount address is: {this.state.senderAddress}, with current balance as {this.state.senderBalance} ethers.<b> Happy Voting </b> </p>
       <Form onSubmit={this.handleSubmit} >
     <Row form>
       <Col style={{margin:"70px 70px 0px 70px"}} md={{size:2,offset:2}}>
@@ -103,6 +108,9 @@ render(){
       <Button  type="submit"  outline color="primary"> Add contestant </Button>
     </Col>
     </Form>
+    <div className="row">
+      <ContestantCard contestantId={this.state.contestantId} contestantAddress={this.state.contestantAddress} ipfsHash={this.state.ipfsHash}/>
+    </div>
     </div>
   )
 }
