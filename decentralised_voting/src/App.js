@@ -11,18 +11,18 @@ import base_contract from "./contracts/base_contract.json"
 
 const web3=new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
 console.log(web3.eth.accounts);
-const contract=new web3.eth.Contract(base_contract.abi,"0x1c10439516559ca533086F123F70e040f2a70512")
+const contract=new web3.eth.Contract(base_contract.abi,"0xa7ECEBA575B6bBb8739732EFd65c89D66D54dF0b")
 
 class App extends Component{
   constructor(props){
     super(props);
     this.state={
-      ipfsHash:""
+      contestantId:""
     }
     this.handleipfs=this.handleipfs.bind(this);
   }
   handleipfs(val){
-    this.setState({ipfsHash:val});
+    this.setState({contestantId:val});
   }
   render(){
     return(
@@ -31,7 +31,7 @@ class App extends Component{
       <Switch>
       <Route path="/addContestants" component={()=><AddVoter web3={web3 && web3} contract={contract&&contract} getipfsHash={this.handleipfs} previpfsHash={this.state.ipfsHash} />}/>
       <Route path="/results" component={Results} />
-      <Route path="/contestantDetails" component={()=><ContestantDetails ipfsVal={this.state.ipfsHash} />} />
+      <Route path="/contestantDetails" component={()=><ContestantDetails web3={web3 && web3} contract={contract&&contract} contestantId={this.state.contestantId} />} />
       <Route path="/home" component={Home}/>
       <Redirect to="/home" />
       </Switch>

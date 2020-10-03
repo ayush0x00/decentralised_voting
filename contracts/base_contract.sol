@@ -6,10 +6,11 @@ contract base_contract{
   constructor() public {
     owner=msg.sender;
   }
-  mapping(address=>uint256) voterAadhar;
-  mapping(uint256=>address) contestants;
+  mapping(address=>uint256) public voterAadhar;
+  mapping(uint256=>address) public contestants;
   mapping(address=>uint256) public votes;
-  mapping(uint256=>string) private contestantImage;
+  mapping(uint256=>string) public contestantImage;
+  uint256[] public contestantIds;
   event contestantAdded(address contestant,string contestantImage);
   event voted(address contestant, address voter, uint256 currentVoteCount);
 
@@ -33,9 +34,14 @@ contract base_contract{
     return paused;
   }
 
+  function getIds() public view returns(uint256[] memory){
+    return contestantIds;
+  }
+
   function addContestants(uint contestantId, address contestantAddress, string memory image) public godMode isContractActive{
     contestants[contestantId]=contestantAddress;
     contestantImage[contestantId]=image;
+    contestantIds.push(contestantId);
     emit contestantAdded(contestants[contestantId],image);
   }
 
