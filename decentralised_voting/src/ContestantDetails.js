@@ -8,36 +8,37 @@ class ContestantDetails extends Component{
     this.state={
       response:false,
       ids:null,
-      result:null
+      data:false
     }
+    this.returned_id=this.returned_id.bind(this);
+    this.display=this.display.bind(this);
+
   }
-  componentDidMount(){
-    this.loadContestants();
-  }
-  componentDidUpdate(){
-    this.returned_id()
+  display(){
+    const result=this.returned_id();
+    console.log(result);;
   }
 
-  async loadContestants(){
-    console.log(this.props.contract);
-    await this.props.contract.methods.getIds().call().then(result=>this.setState({ids:result}))
-  }
-   returned_id(){
-   const result=this.state.ids.map(async(id)=>{
-     const ipfsHash=await this.props.contract.methods.contestantImage(id);
-     const address=await this.props.contract.methods.contestants(id);
-     return(
-       <div>
-         <ContestantCard contestantId={id} contestantAddress={address} ipfsHash={ipfsHash} />
-         </div>
+
+   async returned_id(){
+     const id=await this.props.contract.methods.getIds().call();
+     console.log(id);
+       const result=id.map(async(id)=>{
+        const ipfsHash=await this.props.contract.methods.contestantImage(id).call();
+        const address=await this.props.contract.methods.contestants(id).call();
+        console.log(ipfsHash);
+        return(
+            <div>
+              <ContestantCard contestantId={id} contestantAddress={address} ipfsHash={ipfsHash} />
+            </div>
      )
    })
-   this.setState({result:result});
- }
+   return result;
+ };
 
   render(){
     return(
-      <div className="container">{this.state.result}</div>
+    <div>{this.display()}</div>
     )
   }
 }

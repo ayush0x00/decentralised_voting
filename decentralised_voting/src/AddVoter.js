@@ -30,7 +30,7 @@ async addingContestant(){
   //await this.props.contract.once('contestantAdded',function(error,event){console.log(event);})
   //alert("transaction successfull")
   this.props.getipfsHash(this.state.contestantId);
-  console.log(receipt.events.contestantAdded.returnValues[0]);
+  console.log(receipt);
   console.log(this.state.ipfsHash);
 
 }
