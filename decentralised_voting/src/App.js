@@ -11,7 +11,7 @@ import base_contract from "./contracts/base_contract.json"
 
 const web3=new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
 console.log(web3.eth.accounts);
-const contract=new web3.eth.Contract(base_contract.abi,"0x12A73FF6832A96C6F5EA0274b71Cc7295E27B2b5")
+const contract=new web3.eth.Contract(base_contract.abi,"0x588279AaC11b3D72b4d38FE75e2EcbA74bA88a0A")
 
 class App extends Component{
   constructor(props){

@@ -4621,12 +4621,12 @@
         }
       },
       "links": {},
-      "address": "0x12A73FF6832A96C6F5EA0274b71Cc7295E27B2b5",
-      "transactionHash": "0x4ab253d115d6dfeb4adacfb3f9cdae3e67bce57c815818d0cfd1b5f252778f88"
+      "address": "0x588279AaC11b3D72b4d38FE75e2EcbA74bA88a0A",
+      "transactionHash": "0xd8919348d8a95ee1b85377397e53f9c5326dff5ca3e1f3f843016513de1d462d"
     }
   },
   "schemaVersion": "3.2.0",
-  "updatedAt": "2020-10-09T22:32:13.183Z",
+  "updatedAt": "2020-10-11T21:56:01.114Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

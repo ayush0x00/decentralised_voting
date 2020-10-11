@@ -2,44 +2,46 @@ import React, {Component} from 'react';
 import ContestantCard from './Card'
 const baseURL="https://ipfs.io/ipfs/"
 
-class ContestantDetails extends Component{
-  constructor(props){
+class  ContestantDetails extends Component {
+  constructor(props) {
     super(props);
     this.state={
-      response:false,
-      ids:null,
-      data:false
+      id:[]
     }
-    this.returned_id=this.returned_id.bind(this);
-    this.display=this.display.bind(this);
-
-  }
-  display(){
-    const result=this.returned_id();
-    console.log(result);;
+    this.result=this.result.bind(this);
   }
 
+  async componentDidMount(){
+    try{
+      const id=await this.props.contract.methods.getIds().call();
+      this.setState({id});
+      console.log(id);
+    }catch(err){
+      console.log(err);
+    }
+  }
+  result(){
+  const value=this.state.id.map(async id=>{
+  const image=await this.props.contract.methods.contestantImage(id).call();
+  const address=await this.props.contract.methods.contestants(id).call();
+    return( <ContestantCard id={id} ipfsHash={image} contestantAddress={address} />)
+  })
+  return(value.map(val=>(<div>{val}</div>)))
+}
 
-   async returned_id(){
-     const id=await this.props.contract.methods.getIds().call();
-     console.log(id);
-       const result=id.map(async(id)=>{
-        const ipfsHash=await this.props.contract.methods.contestantImage(id).call();
-        const address=await this.props.contract.methods.contestants(id).call();
-        console.log(ipfsHash);
-        return(
-            <div>
-              <ContestantCard contestantId={id} contestantAddress={address} ipfsHash={ipfsHash} />
-            </div>
-     )
-   })
-   return result;
- };
 
   render(){
+
+    if(this.state.id.length===0){
+      return(<div>Nothing in the voters section</div>)
+    }
+    const value=this.result();
+    console.log(value);
     return(
-    <div>{this.display()}</div>
-    )
+      <div>
+        {value.map(val=><div>{val[0]}</div>)}
+      </div>
+      )
   }
 }
 

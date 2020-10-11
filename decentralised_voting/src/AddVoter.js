@@ -2,6 +2,7 @@ import React,{Component} from 'react'
 import {Row,Form,FormGroup,Col,Input,Label,Button,Image,Alert} from "reactstrap"
 import ContestantCard from './Card'
 
+
 const IPFS=require('ipfs-api');
 const ipfs=new IPFS({host:'ipfs.infura.io',port:5001,protcol:'https'})
 
