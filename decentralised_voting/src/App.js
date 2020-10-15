@@ -11,18 +11,19 @@ import base_contract from "./contracts/base_contract.json"
 
 const web3=new Web3(new Web3.providers.HttpProvider("HTTP://127.0.0.1:7545"));
 console.log(web3.eth.accounts);
-const contract=new web3.eth.Contract(base_contract.abi,"0x588279AaC11b3D72b4d38FE75e2EcbA74bA88a0A")
+const contract=new web3.eth.Contract(base_contract.abi,"0x1A044c0EcA15398797db6325F861A11b797E74e9")
 
 class App extends Component{
   constructor(props){
     super(props);
     this.state={
-      contestantId:""
+      contestantId:"",
+      ipfsHash:""
     }
     this.handleipfs=this.handleipfs.bind(this);
   }
-  handleipfs(val){
-    this.setState({contestantId:val});
+  handleipfs(id,ipfsHash){
+    this.setState({contestantId:id,ipfsHash:ipfsHash});
   }
   render(){
     return(

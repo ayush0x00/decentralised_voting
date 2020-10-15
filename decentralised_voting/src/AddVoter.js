@@ -26,11 +26,8 @@ componentDidMount(){
 }
 
 async addingContestant(){
-  //console.log(`the ipfs hash is ${this.state.ipfsHash}`);
   const receipt=await this.props.contract.methods.addContestants(this.state.contestantId,this.state.contestantAddress,this.state.ipfsHash).send({from:this.state.senderAddress,gas:3000000})
-  //await this.props.contract.once('contestantAdded',function(error,event){console.log(event);})
-  //alert("transaction successfull")
-  this.props.getipfsHash(this.state.contestantId);
+  this.props.getipfsHash(this.state.contestantId,this.state.ipfsHash);
   console.log(receipt);
   console.log(this.state.ipfsHash);
 

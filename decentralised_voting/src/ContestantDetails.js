@@ -8,26 +8,19 @@ class  ContestantDetails extends Component {
     this.state={
       id:[]
     }
-    this.result=this.result.bind(this);
   }
 
   async componentDidMount(){
-    try{
       const id=await this.props.contract.methods.getIds().call();
-      this.setState({id});
-      console.log(id);
-    }catch(err){
-      console.log(err);
-    }
+      const value=await id.map(async id=>{
+      const image=await this.props.contract.methods.contestantImage(id).call();
+      const address=await this.props.contract.methods.contestants(id).call();
+        return([id,image,address]);
+      })
+      Promise.all(value).then(val=>{
+      val.map(temp=>this.setState({id:[...this.state.id,temp]}))})
+      //console.log(this.state.id);
   }
-  result(){
-  const value=this.state.id.map(async id=>{
-  const image=await this.props.contract.methods.contestantImage(id).call();
-  const address=await this.props.contract.methods.contestants(id).call();
-    return( <ContestantCard id={id} ipfsHash={image} contestantAddress={address} />)
-  })
-  return(value.map(val=>(<div>{val}</div>)))
-}
 
 
   render(){
@@ -35,11 +28,14 @@ class  ContestantDetails extends Component {
     if(this.state.id.length===0){
       return(<div>Nothing in the voters section</div>)
     }
-    const value=this.result();
-    console.log(value);
+
     return(
       <div>
-        {value.map(val=><div>{val[0]}</div>)}
+        {this.state.id.map(data=>(
+          <div className="container" key={data[0]}>
+                <ContestantCard id={data[0]} contestantAddress={data[2]} ipfsHash={data[1]} />
+            </div>
+        ))}
       </div>
       )
   }

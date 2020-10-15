@@ -5,9 +5,7 @@ import {Link} from 'react-router-dom';
 const ContestantCard=(props)=>{
   if(props.ipfsHash!==""){
   return(
-    <div key={props.contestantId} className="container" style={{margin:"15px"}}>
-    <div className="row">
-    <div className="col-md-3">
+    <div key={props.contestantId}  style={{margin:"15px"}}>
       <Card>
       <Link to={`/ContestantDetails/${props.contestantId}`}>
         <CardImg style={{width:"200px",height:"150px"}} src={`https://ipfs.io/ipfs/${props.ipfsHash}`} />
@@ -17,8 +15,6 @@ const ContestantCard=(props)=>{
         </Link>
         </Card>
         </div>
-        </div>
-        </div>
   )
 }
 else{
@@ -26,7 +22,7 @@ else{
     <div className="container" style={{margin:"20px"}}>
       <div className="row">
         <h1>Most recent additions..</h1>
-        <p>Your most recent added contestant will be displayed here...For total available contestants for voting please visit ContestantDetails section </p>
+        <p>Your most recent added contestant will be displayed here...For total available contestants for voting please visit AboutContestants section </p>
       </div>
     </div>
   )
